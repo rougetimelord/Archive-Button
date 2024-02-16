@@ -15,8 +15,8 @@ export default defineManifest({
         service_worker: "src/background.js"
     },
     action:{
-        default_title: "Go to the archive"
+        default_title: "Go to the archive",
+        default_area: "navbar"
     },
-    permissions: ["activeTab"],
-    host_permissions:[]
+    permissions: ["activeTab"]
 });
