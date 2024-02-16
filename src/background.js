@@ -7,6 +7,11 @@ const api = (!!chrome) ? chrome : browser;
  */
 const delay = async (ms) => new Promise((res) => {setTimeout(res, ms)});
 
+const changeBadge = async (id, text, color="#FFF") => {
+    api.action.setBadgeText({text: text, tabId: id});
+    api.action.setBadgeBackgroundColor({color: color, tabId: id})
+}
+
 /**
  * @param {chrome.tabs.Tab} tab 
  */
@@ -26,6 +31,7 @@ const run = async (tab) => {
     }
     catch(e) {
         console.error(e);
+        changeBadge(tab.id, "error", "red")
         /**
          * @todo retry or let user know
          */
@@ -34,6 +40,7 @@ const run = async (tab) => {
 
     if (json?.code) {
         console.debug(`IA err: ${json?.message}`)
+        changeBadge(tab.id, "error", "red")
         /**
          * @todo Try again
          */
@@ -46,6 +53,7 @@ const run = async (tab) => {
             }
             else if (k == "archived_snapshots") {
                 console.error(`Unexpected shape: ${json}`);
+                changeBadge("error", "red")
                 /**
                  * @todo tell user
                  * I think I can create a popup here??
@@ -54,6 +62,7 @@ const run = async (tab) => {
             }
             else {
                 console.debug(`No snapshots ${search}, json: ${json}`)
+                changeBadge("no snapshots", "yellow")
                 /**
                  * @todo tell user
                  */
