@@ -20,15 +20,18 @@ const run = async (tab) => {
     /**
      * @type {ArchiveResponse}
      */
-    let json = await fetch(url).then(response => response.json()).catch(e => {
+    let json;
+    try {
+        json = await fetch(url).then(response => response.json());
+    }
+    catch(e) {
         console.error(e);
-    });
-    if (json == undefined) {
         /**
          * @todo retry or let user know
          */
         return;
     }
+
     if (json?.code) {
         console.debug(`IA err: ${json?.message}`)
         /**
@@ -36,22 +39,31 @@ const run = async (tab) => {
          */
     }
     else {
-        if (json.archived_snapshots?.closest !== undefined) {
-            console.error(`${search} is not archived yet`);
-            /**
-             * @todo tell the user
-             * I think I can create a popup here??
-             */
-            return;
+        let ptr = json;
+        for (const k of ["archived_snapshots", "closest"]) {
+            if(ptr.hasOwnProperty(k)) {
+                ptr = ptr[k]
+            }
+            else if (k == "archived_snapshots") {
+                console.error(`Unexpected shape: ${json}`);
+                /**
+                 * @todo tell user
+                 * I think I can create a popup here??
+                 */
+                return
+            }
+            else {
+                console.debug(`No snapshots ${search}, json: ${json}`)
+                /**
+                 * @todo tell user
+                 */
+                return;
+            }
         }
-        else {
-            const redirect = json.archived_snapshots.closest.url;
-            api.tabs.update(tab.id, {
-                url: redirect,
-                loadReplace: true
-            })
-            return;
-        }
+
+        api.tabs.update(tab.id, {
+            url: ptr.url.replace(/^https?/, "https"),
+        })
     }
 }
 
