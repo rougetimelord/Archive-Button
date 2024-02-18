@@ -17,6 +17,7 @@ export default defineManifest({
 	action: {
 		default_title: "Go to the archive",
 		default_area: "navbar",
+		default_popup: "src/pages/popup.html",
 	},
 	permissions: ["activeTab"],
 });

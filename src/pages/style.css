@@ -1,0 +1,94 @@
+:root {
+	--error-bg: #ea574f;
+	--save-bg: #eaa44f;
+	--main-text: #222;
+	--minor-text: #343434;
+	--button-color: #435766;
+	--button-text: #efefef;
+	--shadow: #373f4990;
+	--light: #ffffff50;
+}
+
+body {
+	margin: 0;
+	width: 280px;
+	padding: 20px 10px 5px 10px;
+	text-align: center;
+	font-family: Arial, Helvetica, sans-serif;
+	color: var(--main-text);
+}
+
+.loading {
+	width: 0px;
+	height: 0px;
+}
+
+.save {
+	background-color: var(--save-bg);
+}
+
+.error {
+	background-color: var(--error-bg);
+}
+
+.main {
+	font-size: 1.5rem;
+}
+
+.message {
+	min-height: 100px;
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	align-content: center;
+	justify-content: center;
+	row-gap: 0.6rem;
+}
+
+.label {
+	flex-basis: 100%;
+	font-size: 1.1rem;
+}
+
+.button {
+	text-decoration: none;
+	padding: 5px;
+	background-color: var(--button-color);
+	border-radius: 15%;
+	color: var(--button-text);
+	transition: box-shadow 0.2s ease-out;
+}
+
+.button:hover {
+	box-shadow: 1px 2px 2px 1px var(--shadow);
+	filter: brightness(105%);
+}
+
+.button:active {
+	filter: brightness(95%);
+	box-shadow: none;
+}
+
+.subtitle {
+	margin-top: 15px;
+	color: var(--minor-text);
+	font-size: 0.9rem;
+}
+
+.loader {
+	border: 10px solid #f3f3f3; /* Light grey */
+	border-top: 10px solid #3498db; /* Blue */
+	border-radius: 50%;
+	width: 30px;
+	height: 30px;
+	animation: spin 2s linear infinite;
+}
+
+@keyframes spin {
+	0% {
+		transform: rotate(0deg);
+	}
+	100% {
+		transform: rotate(360deg);
+	}
+}

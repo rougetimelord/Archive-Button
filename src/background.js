@@ -10,15 +10,18 @@ const delay = async (ms) =>
 		setTimeout(res, ms);
 	});
 
-const changeBadge = async (id, text, color = "#FFF") => {
-	api.action.setBadgeText({ text: text, tabId: id });
-	api.action.setBadgeBackgroundColor({ color: color, tabId: id });
+const savePopup = (message, sendResponse) => {
+	sendResponse({ type: "save", msg: message });
+};
+
+const errorPopup = (message, sendResponse) => {
+	sendResponse({ type: "error", msg: message });
 };
 
 /**
  * @param {chrome.tabs.Tab} tab
  */
-const run = async (tab) => {
+const run = async (tab, _, sendResponse) => {
 	const search = new URL(tab.url);
 	search.search = "";
 	const url = new URL("http://archive.org/wayback/available");
@@ -33,19 +36,13 @@ const run = async (tab) => {
 		json = await fetch(url).then((response) => response.json());
 	} catch (e) {
 		console.error(e);
-		changeBadge(tab.id, "error", "red");
-		/**
-		 * @todo retry or let user know
-		 */
+		errorPopup(e, sendResponse);
 		return;
 	}
 
 	if (json?.code) {
 		console.debug(`IA err: ${json?.message}`);
-		changeBadge(tab.id, "error", "red");
-		/**
-		 * @todo Try again
-		 */
+		errorPopup(json.message, sendResponse);
 	} else {
 		let ptr = json;
 		for (const k of ["archived_snapshots", "closest"]) {
@@ -53,18 +50,11 @@ const run = async (tab) => {
 				ptr = ptr[k];
 			} else if (k == "archived_snapshots") {
 				console.error(`Unexpected shape: ${json}`);
-				changeBadge("error", "red");
-				/**
-				 * @todo tell user
-				 * I think I can create a popup here??
-				 */
+				errorPopup(`Unexpected shape: ${json}`, sendResponse);
 				return;
 			} else {
 				console.debug(`No snapshots ${search}, json: ${json}`);
-				changeBadge("no snapshots", "yellow");
-				/**
-				 * @todo tell user
-				 */
+				savePopup(search, sendResponse);
 				return;
 			}
 		}
@@ -75,4 +65,4 @@ const run = async (tab) => {
 	}
 };
 
-api.action.onClicked.addListener(run);
+api.runtime.onMessage.addListener(run);
