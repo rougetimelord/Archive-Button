@@ -6,6 +6,8 @@ const api = !!chrome ? chrome : browser;
 api.tabs.query({ active: true, currentWindow: true }, (tabs) => {
 	api.runtime.sendMessage(tabs[0], (data) => {
 		if (!data) {
+			document.body.classList.add("success");
+			setTimeout(() => window.close(),1000);
 			return;
 		}
 		if (data.type == "error") {

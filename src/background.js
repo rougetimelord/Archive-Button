@@ -21,7 +21,7 @@ const errorPopup = (message, sendResponse) => {
 /**
  * @param {chrome.tabs.Tab} tab
  */
-const run = async (tab, _, sendResponse) => {
+const run = (tab, _, sendResponse) => {
 	const search = new URL(tab.url);
 	search.search = "";
 	const url = new URL("http://archive.org/wayback/available");
@@ -33,36 +33,38 @@ const run = async (tab, _, sendResponse) => {
 	 */
 	let json;
 	try {
-		json = await fetch(url).then((response) => response.json());
+		json = fetch(url)
+			.then((response) => response.json())
+			.then((json) => {
+				if (json?.code) {
+					console.debug(`IA err: ${json?.message}`);
+					errorPopup(json.message, sendResponse);
+				} else {
+					let ptr = json;
+					if (!ptr.hasOwnProperty("archived_snapshots")) {
+						console.error(`Unexpected shape: ${JSON.stringify(json)}`);
+						errorPopup(`Unexpected shape: ${json}`, sendResponse);
+					} else {
+						ptr = ptr.archived_snapshots;
+						if (ptr.hasOwnProperty("closest")) {
+							ptr = ptr.closest;
+							api.tabs.update(tab.id, {
+								url: ptr.url.replace(/^https?/, "https"),
+							});
+							sendResponse(null);
+						} else {
+							console.debug(`No snapshots ${search}, json: ${JSON.stringify(json)}`);
+							savePopup(search, sendResponse);
+						}
+					}
+				}
+			});
 	} catch (e) {
 		console.error(e);
 		errorPopup(e, sendResponse);
-		return;
+		return true;
 	}
-
-	if (json?.code) {
-		console.debug(`IA err: ${json?.message}`);
-		errorPopup(json.message, sendResponse);
-	} else {
-		let ptr = json;
-		for (const k of ["archived_snapshots", "closest"]) {
-			if (ptr.hasOwnProperty(k)) {
-				ptr = ptr[k];
-			} else if (k == "archived_snapshots") {
-				console.error(`Unexpected shape: ${json}`);
-				errorPopup(`Unexpected shape: ${json}`, sendResponse);
-				return;
-			} else {
-				console.debug(`No snapshots ${search}, json: ${json}`);
-				savePopup(search, sendResponse);
-				return;
-			}
-		}
-
-		api.tabs.update(tab.id, {
-			url: ptr.url.replace(/^https?/, "https"),
-		});
-	}
+	return true;
 };
 
 api.runtime.onMessage.addListener(run);
