@@ -1,7 +1,7 @@
 /**
  * @type {chrome}
  */
-const api = !!chrome ? chrome : browser;
+const api = !!browser ? browser : chrome;
 
 api.tabs.query({ active: true, currentWindow: true }, (tabs) => {
 	api.runtime.sendMessage(tabs[0], (data) => {

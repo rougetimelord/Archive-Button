@@ -22,7 +22,22 @@ const errorPopup = (message, sendResponse) => {
  * @param {chrome.tabs.Tab} tab
  */
 const run = (tab, _, sendResponse) => {
-	const search = new URL(tab.url);
+	let search;
+	try {
+		search = new URL(tab.url);
+	} catch (e) {
+		console.error(`Error in URL creation ${e}, ${tab.url}`);
+		return true;
+	}
+	
+	if (!(/https?/i).test(search.protocol)){
+		errorPopup("Only use the Archive button on websites!", sendResponse);
+		return true;
+	}
+	else if ((/web.archive.org/i).test(search.hostname)) {
+		errorPopup("You're already on the archived page!", sendResponse);
+		return true;
+	}
 	search.search = "";
 	const url = new URL("http://archive.org/wayback/available");
 	url.search = new URLSearchParams({
