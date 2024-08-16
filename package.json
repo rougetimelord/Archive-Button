@@ -1,10 +1,10 @@
 {
   "name": "archive-button",
-  "version": "0.3.0",
+  "version": "1.0.0",
   "description": "Chrome extension that adds a button straight to the Wayback Machine",
   "scripts": {
     "build": "vite build",
-    "fmt": "prettier --write **/*.{js,css,html}"
+    "fmt": "prettier --write **/*.{ts,js,css,html}"
   },
   "browser": {
     "[module-name]": false
