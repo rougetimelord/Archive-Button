@@ -35,7 +35,7 @@ const run = (tab: chrome.tabs.Tab, _: any, sendResponse: (response?: any) => voi
 		errorPopup("You're already on the archived page!", sendResponse);
 		return true;
 	}
-	const url = new URL("http://archive.org/wayback/available");
+	const url = new URL("https://archive.org/wayback/available");
 	url.search = new URLSearchParams({
 		url: encodeURI(`${search.host}${search.pathname}`),
 	}).toString();
