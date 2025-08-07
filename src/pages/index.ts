@@ -21,7 +21,7 @@ _api.tabs.query({ active: true, currentWindow: true }, (tabs: chrome.tabs.Tab[])
 				.getElementById("b")!
 				.setAttribute(
 					"href",
-					`https://web.archive.org/save/${encodeURI(data.msg)}`,
+					`https://web.archive.org/save/${encodeURI(data.msg)}?skip_first_archive=1`,
 				);
 		}
 	});

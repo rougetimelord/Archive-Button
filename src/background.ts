@@ -32,7 +32,7 @@ const run = (tab: chrome.tabs.Tab, _: any, sendResponse: (response?: any) => voi
 		errorPopup("You can only use the Archive button on websites!", sendResponse);
 		return true;
 	} else if (/web.archive.org/i.test(search.hostname)) {
-		errorPopup("You're already on the archived page!", sendResponse);
+		errorPopup("You're already on an archived page!", sendResponse);
 		return true;
 	}
 	const url = new URL("https://archive.org/wayback/available");
@@ -58,6 +58,9 @@ const run = (tab: chrome.tabs.Tab, _: any, sendResponse: (response?: any) => voi
 						sendResponse(null);
 					} else {
 						console.debug(`No snapshots ${search}, json: ${JSON.stringify(json)}`);
+						const saveURL = `https://web.archive.org/save/${encodeURI(search.href)}?skip_first_archive=1`;
+						fetch(saveURL, {method: "GET", mode: "no-cors"}).then((res) => {}
+						).catch((e) => {});
 						savePopup(search.href, sendResponse);
 					}
 				}
