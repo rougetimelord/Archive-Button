@@ -9,24 +9,20 @@ _api.tabs.query({ active: true, currentWindow: true }, (tabs: chrome.tabs.Tab[])
 			return;
 		}
 		if (data.type == "error") {
-			fetch(_api.runtime.getURL("src/pages/error.html"))
-				.then((res) => res.text())
-				.then((text) => {
-					document.write(text);
-					document.getElementById("m")!.innerText = data.msg;
-				});
+			document.body.className = "error";
+			document.getElementById("loader")?.setAttribute("hidden", "");
+			document.getElementById("error")?.removeAttribute("hidden");
+			document.getElementById("mError")!.innerText = data.msg;
 		} else if (data.type == "save") {
-			fetch(_api.runtime.getURL("src/pages/save.html"))
-				.then((res) => res.text())
-				.then((text) => {
-					document.write(text);
-					document
-						.getElementById("b")!
-						.setAttribute(
-							"href",
-							`https://web.archive.org/save/${encodeURI(data.msg)}`,
-						);
-				});
+			document.body.className = "save";
+			document.getElementById("loader")?.setAttribute("hidden", "");
+			document.getElementById("save")?.removeAttribute("hidden");
+			document
+				.getElementById("b")!
+				.setAttribute(
+					"href",
+					`https://web.archive.org/save/${encodeURI(data.msg)}`,
+				);
 		}
 	});
 });

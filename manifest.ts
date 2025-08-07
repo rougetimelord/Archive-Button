@@ -3,7 +3,7 @@ import { defineManifest } from "@crxjs/vite-plugin";
 export default defineManifest({
 	name: "Archive Button",
 	description: "Button to go straight to the internet archive",
-	version: "1.0.1",
+	version: "1.0.2",
 	author: "r0uge",
 	manifest_version: 3,
 	/** @ts-ignore */

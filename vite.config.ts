@@ -8,10 +8,6 @@ export default defineConfig(() => {
 			emptyOutDir: true,
 			outDir: "build",
 			rollupOptions: {
-				input: {
-					save: "./src/pages/save.html",
-					error: "./src/pages/error.html",
-				},
 				output: {
 					chunkFileNames: "assets/chunk-[hash].js",
 				},

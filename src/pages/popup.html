@@ -6,6 +6,25 @@
 		<script type="module" src="./index.ts"></script>
 	</head>
 	<body class="loading">
-		<div class="loader"></div>
+		<div id="loader" class="loader"></div>
+		<div id="error" hidden>
+			<div class="main">Ran into an error!</div>
+			<div class="message" id="mError"></div>
+			<div class="subtitle">
+				If the error happened in the extension please file an issue on the GitHub
+			</div>
+		</div>
+		<div id="save" hidden>
+			<div class="main">
+				The page you tried to access is not saved in the wayback machine yet!
+			</div>
+			<div class="message" id="mSave">
+				<div class="label">If you want you can save the page yourself</div>
+				<a href="" target="_blank" class="button" id="b"> save </a>
+			</div>
+			<div class="subtitle">
+				Thank you for contributing to the preservation of the internet
+			</div>
+		</div>
 	</body>
 </html>
