@@ -59,8 +59,7 @@ const run = (tab: chrome.tabs.Tab, _: any, sendResponse: (response?: any) => voi
 					} else {
 						console.debug(`No snapshots ${search}, json: ${JSON.stringify(json)}`);
 						const saveURL = `https://web.archive.org/save/${encodeURI(search.href)}?skip_first_archive=1`;
-						fetch(saveURL, {method: "GET", mode: "no-cors"}).then((res) => {}
-						).catch((e) => {});
+						fetch(saveURL, {method: "GET", mode: "no-cors"}).catch((e) => {});
 						savePopup(search.href, sendResponse);
 					}
 				}

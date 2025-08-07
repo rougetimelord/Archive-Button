@@ -1,6 +1,6 @@
 {
   "name": "archive-button",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "Chrome extension that adds a button straight to the Wayback Machine",
   "scripts": {
     "build": "vite build",
